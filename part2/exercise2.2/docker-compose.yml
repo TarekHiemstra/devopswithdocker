@@ -1,0 +1,10 @@
+# EXERCISE 2.2
+
+services:
+  simple-web-service:
+    image: devopsdockeruh/simple-web-service
+    build: .
+    container_name: simple-web-service
+    ports:
+      - 8000:8000
+    command: server
