@@ -1,0 +1,15 @@
+# EXERCISE 2.3
+
+services:
+  example-frontend:
+    image: example-frontend
+    build: ./example-frontend
+    container_name: example-frontend
+    ports:
+      - 5001:5001
+  example-backend:
+    image: example-backend
+    build: ./example-backend
+    container_name: example-backend
+    ports:
+      - 8080:8080
