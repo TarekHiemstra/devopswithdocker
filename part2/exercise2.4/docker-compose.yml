@@ -1,0 +1,22 @@
+# EXERCISE 2.4
+
+services:
+  example-frontend:
+    image: example-frontend
+    build: ./example-frontend
+    container_name: example-frontend
+    ports:
+      - 5001:5001
+  example-backend:
+    image: example-backend
+    build: ./example-backend
+    container_name: example-backend
+    ports:
+      - 8080:8080
+    environment:
+      - REDIS_HOST=redis-server
+  redis-server:
+    image: redis:6.2-alpine
+    container_name: redis-server
+    restart: unless-stopped
+    command: redis-server
