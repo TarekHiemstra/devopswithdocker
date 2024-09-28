@@ -1,0 +1,42 @@
+# EXERCISE 2.7
+
+services:
+  db:
+    image: postgres:13.2-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=example
+    container_name: db_example-backend
+    volumes:
+      - type: bind
+        source: database # make sure ./database directory exists
+        target: /var/lib/postgresql/data 
+
+  example-frontend:
+    image: example-frontend
+    build: ./example-frontend
+    container_name: example-frontend
+    ports:
+      - 5001:5001
+  
+  example-backend:
+    image: example-backend
+    build: ./example-backend
+    container_name: example-backend
+    ports:
+      - 8080:8080
+    environment:
+      - REDIS_HOST=redis-server
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=example
+    depends_on: 
+      - db
+  
+  redis-server:
+    image: redis:6.2-alpine
+    container_name: redis-server
+    restart: unless-stopped
+    command: redis-server
+
+volumes: 
+  database:
