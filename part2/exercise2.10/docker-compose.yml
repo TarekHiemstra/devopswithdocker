@@ -1,0 +1,47 @@
+# EXERCISE 2.10
+# Required change: Remove ports ports from example-frontend and example-backend
+
+services:
+  nginx:
+    image: nginx:1.26.2
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+
+  db:
+    image: postgres:13.2-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=example
+    container_name: db_example-backend
+    volumes:
+      - type: bind
+        source: database # make sure ./database directory exists
+        target: /var/lib/postgresql/data 
+
+  example-frontend:
+    image: example-frontend
+    build: ./example-frontend
+    container_name: example-frontend
+
+
+  example-backend:
+    image: example-backend
+    build: ./example-backend
+    container_name: example-backend
+    environment:
+      - REDIS_HOST=redis-server
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=example
+    depends_on: 
+      - db
+  
+  redis-server:
+    image: redis:6.2-alpine
+    container_name: redis-server
+    restart: unless-stopped
+    command: redis-server
+
+volumes: 
+  database:
